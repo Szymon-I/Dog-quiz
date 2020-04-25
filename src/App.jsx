@@ -20,9 +20,9 @@ const mainColor = '#4287f5';
 //   }
 // }
 const difficulty = {
-  EASY: 1,
-  MEDIUM: 2,
-  HARD: 3
+  EASY: 'easy',
+  MEDIUM: 'mid',
+  HARD: 'hard'
 }
 
 
@@ -69,7 +69,6 @@ class ImageApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      difficulty: props.difficulty,
       error: null,
       isLoaded: false,
       url: null,
@@ -136,7 +135,7 @@ class ImageApp extends React.Component {
     return (
       <>
         <ColumnWrapper content={content} />
-        <ColumnWrapper content={<ButtonsMenu difficulty={this.state.difficulty} />} />
+        <ColumnWrapper content={<ButtonsMenu difficulty={this.props.difficulty} />} />
       </>
     );
   }
@@ -164,23 +163,29 @@ function TopPadding(props) {
     </>
   );
 }
-class ChangeDifficulty extends React.Component {
-  componentDidMount(){
+function MenuEntry(props) {
+  return (
+    <li><a className={"btn-floating " + props.color} onClick={props.changeHandler}>{props.difficulty}</a></li>
+  )
+}
+
+class DifficultyMenu extends React.Component {
+  componentDidMount() {
     M.FloatingActionButton.init($('#diff_button'));
   }
-  render(){
-  return (
-    <div className="fixed-action-btn difficulty_menu" id='diff_button'>
-      <a className="btn-floating btn-large red">
-        <i className="large material-icons">arrow_drop_up</i>
-      </a>
-      <ul>
-        <li><a className="btn-floating green">easy</a></li>
-        <li><a className="btn-floating yellow darken-3">mid</a></li>
-        <li><a className="btn-floating red">hard</a></li>
-      </ul>
-    </div>
-  );
+  render() {
+    return (
+      <div className="fixed-action-btn difficulty_menu" id='diff_button'>
+        <a className="btn-floating btn-large red">
+          <i className="large material-icons">arrow_drop_up</i>
+        </a>
+        <ul>
+          <MenuEntry color='green' difficulty={difficulty.EASY} changeHandler={()=>this.props.changeHandler(difficulty.EASY)} />
+          <MenuEntry color='yellow darken-3' difficulty={difficulty.MEDIUM} changeHandler={()=>this.props.changeHandler(difficulty.MEDIUM)} />
+          <MenuEntry color='red' difficulty={difficulty.HARD} changeHandler={()=>this.props.changeHandler(difficulty.HARD)} />
+        </ul>
+      </div>
+    );
   }
 }
 
@@ -205,12 +210,15 @@ class App extends React.Component {
       difficulty: difficulty.EASY,
     }
   }
+  changeDifficulty = (diff) => {
+    this.setState({ difficulty: diff });
+  }
   render() {
     return (
       <div class="container">
         <TopPadding />
         <ImageApp difficulty={this.state.difficulty} />
-        <ChangeDifficulty/>
+        <DifficultyMenu changeHandler={this.changeDifficulty} />
       </div>
     );
   }
