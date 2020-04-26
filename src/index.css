@@ -29,9 +29,9 @@ code {
  text-align: center;
  font-size: 4em;
 }
-.difficulty_menu{
+/* .difficulty_menu{
   font-family: monospace, 'monospace'
-}
+} */
 
 .difficulty-hint{
   padding-right: 2%;
@@ -41,5 +41,21 @@ code {
 }
 .dropdown-content{
   position: relative !important;
-
+}
+.bar-top{
+  background-color:  #2196f3;
+}
+.bar-bottom{
+  background-color:  #ffc107;
+}
+.sticky-footer{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  min-width: 100%;
+}
+.fixed-action-btn{
+  bottom: 10vh;
+  right: 3vw;
+  
 }

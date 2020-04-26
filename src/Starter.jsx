@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import {difficulty} from './Globals';
+import {difficulty, answerNoptions} from './Globals';
 class StartingDifficulty extends React.Component {
     render() {
       return (
@@ -37,13 +37,13 @@ class StartingDifficulty extends React.Component {
           </div>
           <div className="row center-align">
             <div className='col s4'>
-              <a className="waves-effect waves-light btn" onClick={()=>this.props.setter(10)}>10</a>
+      <a className="waves-effect waves-light btn" onClick={()=>this.props.setter(answerNoptions.easy)}>{answerNoptions.easy}</a>
             </div>
             <div className='col s4'>
-              <a className="waves-effect waves-light btn" onClick={()=>this.props.setter(20)}>20</a>
+      <a className="waves-effect waves-light btn" onClick={()=>this.props.setter(answerNoptions.mid)}>{answerNoptions.mid}</a>
             </div>
             <div className='col s4'>
-              <a className="waves-effect waves-light btn" onClick={()=>this.props.setter(30)}>30</a>
+              <a className="waves-effect waves-light btn" onClick={()=>this.props.setter(answerNoptions.hard)}>{answerNoptions.hard}</a>
             </div>
           </div>
         </>

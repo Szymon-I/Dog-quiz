@@ -9,6 +9,12 @@ const breeds = ['affenpinscher', 'african', 'airedale', 'akita', 'appenzeller', 
 const difficultyNumber = {
     easy: 2,
     mid: 4,
-    hard: 6,
+    hard: 5,
 }
-export { difficulty, breeds, difficultyNumber }
+const answerNoptions = {
+    easy: 10,
+    mid: 20,
+    hard: 30,
+}
+const randomImageUrl = 'https://dog.ceo/api/breeds/image/random';
+export { difficulty, breeds, difficultyNumber, randomImageUrl,answerNoptions }

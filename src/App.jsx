@@ -1,12 +1,13 @@
 import React from 'react';
-import { difficulty, breeds, difficultyNumber } from './Globals';
+import { difficulty, breeds, difficultyNumber, randomImageUrl } from './Globals';
 import { StartingSettings } from './Starter';
 import './App.css';
 import './animations.css';
 import { DualRing } from 'react-spinners-css';
 import $ from 'jquery';
 import M from 'materialize-css';
-const randomImageUrl = 'https://dog.ceo/api/breeds/image/random';
+
+
 const mainColor = '#4287f5';
 
 // class NextButton extends React.Component {
@@ -47,12 +48,20 @@ function ColumnWrapper(props) {
 
 class ButtonsMenu extends React.Component {
   componentDidMount() {
-    M.Dropdown.init($('.dropdown-trigger'), {container: $('#drop-options')});
+    M.Dropdown.init($('.dropdown-trigger'), {
+      container: $('#drop-options'),
+      autoTrigger: true,
+    });
   }
 
   render() {
-    const listItems = this.props.breeds.map((dog) =>
-      <li key={dog}><a href="#!">{dog}</a></li>);
+    let listItems = [];
+    let dogs = this.props.breeds;
+    for (let i = 0; i < dogs.length; i++) {
+      listItems[i] = <li key={dogs[i]}><a onClick={() => this.props.handler(i)}>{dogs[i]}</a></li>;
+    }
+    // const listItems = this.props.breeds.map((dog) =>
+    //   <li key={dog}><a onClick={()=>this.props.answerWrapper()}>{dog}</a></li>);
     return (
       <div id='drop-options'>
         <a class='dropdown-trigger btn' href='#' data-target='dropdown1'>Choose</a>
@@ -72,10 +81,13 @@ class ImageApp extends React.Component {
       error: null,
       isLoaded: false,
       url: null,
-      prev_diff: props.difficulty
+      //prev_diff: this.props.difficulty,
+      prev_diff: null,
+      correct_id: null,
+      generatedBreeds: null,
+      questionN: 0,
     };
   }
-
   fetch_photo = () => {
     fetch(randomImageUrl)
       .then(res => res.json())
@@ -93,10 +105,14 @@ class ImageApp extends React.Component {
               error: { message: 'file corrupted' }
             });
           }
+          let generatedBreeds = this.generateBreeds(url);
+          let correct_id = this.getCorrectId(generatedBreeds, this.getNameFromUrl(url));
           this.setState({
             isLoaded: true,
             url: url,
-            status: result.status
+            status: result.status,
+            correct_id: correct_id,
+            generatedBreeds: generatedBreeds,
           });
         },
         // handle fetch error
@@ -110,7 +126,9 @@ class ImageApp extends React.Component {
   }
   // fetch phono after component is mounted
   componentDidMount() {
+    //this.setState({prev_diff: this.props.difficulty});
     this.fetch_photo();
+    //this.generateBreeds();
   }
 
   componentDidUpdate() {
@@ -120,11 +138,13 @@ class ImageApp extends React.Component {
         error: null
       });
     }
-    // if difficulty has changed -> get new photo and update old setting
+    //if difficulty has changed -> get new photo and update old setting
     if (this.props.difficulty !== this.state.prev_diff) {
       this.fetch_photo();
+      //this.generateBreeds();
       this.setState({ prev_diff: this.props.difficulty })
     }
+    //this.fetch_photo();
   }
 
   shuffle = (arr) => {
@@ -136,10 +156,13 @@ class ImageApp extends React.Component {
     }
     return arr;
   }
-  generateBreeds = () => {
-    const splitted = this.state.url.split('/');
+  getNameFromUrl = (url) => {
+    const splitted = url.split('/');
     const n = splitted.length;
-    const breedName = splitted[n - 2];
+    return splitted[n - 2];
+  }
+  generateBreeds = (url) => {
+    const breedName = this.getNameFromUrl(url);
     const diff = this.props.difficulty;
     let breedCopy = [...breeds];
     breedCopy.splice(breedCopy.indexOf(breedName), 1);
@@ -151,6 +174,19 @@ class ImageApp extends React.Component {
     }
     return this.shuffle(generatedBreeds);
   }
+  getCorrectId = (dogs, correct) => {
+    return dogs.indexOf(correct);
+  }
+  answerWrapper = (choosen_id) => {
+    if (choosen_id === this.state.correct_id) {
+      this.props.handleAnswer(true);
+    }
+    else {
+      this.props.handleAnswer(false);
+    }
+    this.fetch_photo();
+    //this.setState({ questionN: this.state.questionN + 1 });
+  }
 
 
 
@@ -160,7 +196,8 @@ class ImageApp extends React.Component {
       return (
         <ColumnWrapper content={<p>{error.message}</p>} columnClasses='image-container col s12 m10 offset-m1 l8 offset-l2' />
       );
-    } else if (!isLoaded || !this.state.url) {
+      // was || !this.state.url
+    } else if (!isLoaded) {
       return (
         <ColumnWrapper content={<DualRing
           className='custom-spinner'
@@ -169,29 +206,48 @@ class ImageApp extends React.Component {
         />} columnClasses='image-container col s12 m10 offset-m1 l8 offset-l2' />
       );
     } else {
-      const content = <img className='dog-image valign-wrapper scale-up-center' src={url} alt="" key={url} />
-      const breedOptions = this.generateBreeds();
+      const content = <img className='dog-image valign-wrapper scale-up-center z-depth-5' src={url} alt="" key={url} />
       return (
         <>
           <ColumnWrapper content={content} columnClasses='image-container col s12 m8 offset-m2 l6 offset-l3 xl4 offset-xl4' />
-          <ColumnWrapper content={<ButtonsMenu difficulty={this.props.difficulty} breeds={breedOptions} />}
-            columnClasses='image-container col s12 m10 offset-m1 l8 offset-l2 center-align' />
+          <ColumnWrapper content={<ButtonsMenu breeds={this.state.generatedBreeds} handler={this.answerWrapper} />}
+            columnClasses='col s12 m10 offset-m1 l8 offset-l2 center-align' />
         </>
       );
     }
   }
 }
 
+function ProgressBar(props) {
 
-// function DogImageContainer(props) {
-//   return (
-//     <div class="row">
-//       <div className="image-container col s12 m6 offset-m3 l4 offset-l4">
-//         <ImageLoader />
-//       </div>
-//     </div>
-//   );
-// }
+}
+function Footer(props) {
+  return (
+    <footer class="page-footer sticky-footer">
+      <div class="footer-copyright">
+        <div class="container">
+          <span className='left'>© 2020 Szymon Idziniak</span>
+          <span className='right'>{'Difficulty:  ' + props.difficulty}</span> 
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+class PlayerInfo extends React.Component {
+
+  render() {
+
+    return (
+      //<ColumnWrapper columnClasses='image-container col s12 m8 offset-m2 l6 offset-l3 xl4 offset-xl4' />
+      // <>
+      //   <p> {this.props.difficulty}</p>
+      //   <p> {this.props.questionN}</p>
+      // </>
+      <Footer difficulty={this.props.difficulty}/>
+    );
+  }
+}
 
 function TopPadding(props) {
   return (
@@ -256,7 +312,9 @@ class App extends React.Component {
       playerAnswers: {
         correct: 0,
         incorrect: 0,
-      }
+        all: 0
+      },
+      //renderNext: true,
     }
   }
   starterSettings = (settings) => {
@@ -271,20 +329,53 @@ class App extends React.Component {
       this.setState({ difficulty: diff });
     }
   }
+
+  // handleAnswer = (correct_id, chosen_id) => {
+  //   if (correct_id === chosen_id) {
+  //     this.setState({ correct: this.state.correct + 1 })
+  //   }
+  //   else {
+  //     this.setState({ incorrect: this.state.incorrect + 1 })
+  //   }
+  handleAnswer = (goodOption) => {
+    let correctN = this.state.playerAnswers.correct;
+    let incorrectN = this.state.playerAnswers.incorrect;
+    if (goodOption) {
+      correctN += 1;
+    }
+    else {
+      incorrectN += 1;
+    }
+    this.setState({
+      playerAnswers: {
+        correct: correctN,
+        incorrect: incorrectN,
+        all: correctN + incorrectN,
+      },
+    });
+  }
   render() {
     if (this.state.settingsApplied) {
-      return (
-        <div className="container">
-          <TopPadding message='What dog is this?' />
-          <ImageApp difficulty={this.state.difficulty} />
-          <DifficultyMenu changeHandler={this.changeDifficulty} />
-        </div>
-      );
+      if (this.state.questionNumber !== this.state.playerAnswers.all) {
+        return (
+          <div className="container">
+            <TopPadding message='What dog is this?' />
+            <ImageApp difficulty={this.state.difficulty} handleAnswer={this.handleAnswer} questionN={this.state.playerAnswers.all} />
+            <DifficultyMenu changeHandler={this.changeDifficulty} />
+            <PlayerInfo difficulty={this.state.difficulty} questionN={this.state.playerAnswers.all} />
+          </div>
+        );
+      }
+      else {
+        return (
+          <p>finished</p>
+        );
+      }
     }
     else {
       return (
         <div className="container">
-          <TopPadding message='' />
+          <TopPadding message='' className='bar-top' />
           <StartingSettings PushSettings={this.starterSettings} />
         </div>
       );
