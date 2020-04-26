@@ -1,50 +1,13 @@
 import React from 'react';
-import { difficulty, breeds, difficultyNumber, randomImageUrl } from './Globals';
+import { difficulty, breeds, difficultyNumber, randomImageUrl, mainColor } from './Globals';
 import { StartingSettings } from './Starter';
+import { PlayerInfo, TopPadding, MenuEntry, ColumnWrapper, Finished } from './FunComponents'
 import './App.css';
 import './animations.css';
 import { DualRing } from 'react-spinners-css';
 import $ from 'jquery';
 import M from 'materialize-css';
 
-
-const mainColor = '#4287f5';
-
-// class NextButton extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {}
-//   }
-//   render() {
-//     return (
-//       <>
-//         <button onClick={() => this.props.fetch_photo()}>next</button>
-//       </>
-//     );
-//   }
-// }
-
-
-
-function ColumnWrapper(props) {
-  return (
-    <div className="row">
-      <div className={props.columnClasses}>
-        {props.content}
-      </div>
-    </div>
-  );
-}
-
-// function ImageWrapper(props) {
-//   return (
-//     <div class="row">
-//       <div className="image-container col s12 m10 offset-m1 l8 offset-l2">
-//         {props.content}
-//       </div>
-//     </div>
-//   );
-// }
 
 class ButtonsMenu extends React.Component {
   componentDidMount() {
@@ -60,8 +23,7 @@ class ButtonsMenu extends React.Component {
     for (let i = 0; i < dogs.length; i++) {
       listItems[i] = <li key={dogs[i]}><a onClick={() => this.props.handler(i)}>{dogs[i]}</a></li>;
     }
-    // const listItems = this.props.breeds.map((dog) =>
-    //   <li key={dog}><a onClick={()=>this.props.answerWrapper()}>{dog}</a></li>);
+
     return (
       <div id='drop-options'>
         <a class='dropdown-trigger btn' href='#' data-target='dropdown1'>Choose</a>
@@ -188,8 +150,6 @@ class ImageApp extends React.Component {
     //this.setState({ questionN: this.state.questionN + 1 });
   }
 
-
-
   render() {
     const { error, isLoaded, url } = this.state;
     if (error) {
@@ -218,53 +178,6 @@ class ImageApp extends React.Component {
   }
 }
 
-function ProgressBar(props) {
-
-}
-function Footer(props) {
-  return (
-    <footer class="page-footer sticky-footer">
-      <div class="footer-copyright">
-        <div class="container">
-          <span className='left'>© 2020 Szymon Idziniak</span>
-          <span className='right'>{'Difficulty:  ' + props.difficulty}</span> 
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-class PlayerInfo extends React.Component {
-
-  render() {
-
-    return (
-      //<ColumnWrapper columnClasses='image-container col s12 m8 offset-m2 l6 offset-l3 xl4 offset-xl4' />
-      // <>
-      //   <p> {this.props.difficulty}</p>
-      //   <p> {this.props.questionN}</p>
-      // </>
-      <Footer difficulty={this.props.difficulty}/>
-    );
-  }
-}
-
-function TopPadding(props) {
-  return (
-    <>
-      <div className='row'>
-        <div className="top-padding s12">
-          <p className='header-text wobble-hor-bottom'>{props.message}</p>
-        </div>
-      </div>
-    </>
-  );
-}
-function MenuEntry(props) {
-  return (
-    <li key={props.color}><a className={"btn-floating " + props.color} onClick={props.changeHandler}>{props.difficulty}</a></li>
-  )
-}
 
 class DifficultyMenu extends React.Component {
   componentDidMount() {
@@ -286,21 +199,6 @@ class DifficultyMenu extends React.Component {
   }
 }
 
-// function NoDog(props){
-//   return(
-//   <div>No dog {props.error}</div>
-//   )
-// }
-// function LoadingDog(props){
-//   return(
-//      <div className="image-container">
-//      <LoopCircleLoading />
-//      </div>
-//     );
-// }
-
-
-
 
 class App extends React.Component {
   constructor(props) {
@@ -317,6 +215,18 @@ class App extends React.Component {
       //renderNext: true,
     }
   }
+  resetGame = () => {
+    this.setState({
+      settingsApplied: false,
+      difficulty: null,
+      questionNumber: null,
+      playerAnswers: {
+        correct: 0,
+        incorrect: 0,
+        all: 0
+      }
+    });
+  }
   starterSettings = (settings) => {
     this.setState({
       settingsApplied: true,
@@ -329,14 +239,6 @@ class App extends React.Component {
       this.setState({ difficulty: diff });
     }
   }
-
-  // handleAnswer = (correct_id, chosen_id) => {
-  //   if (correct_id === chosen_id) {
-  //     this.setState({ correct: this.state.correct + 1 })
-  //   }
-  //   else {
-  //     this.setState({ incorrect: this.state.incorrect + 1 })
-  //   }
   handleAnswer = (goodOption) => {
     let correctN = this.state.playerAnswers.correct;
     let incorrectN = this.state.playerAnswers.incorrect;
@@ -362,13 +264,18 @@ class App extends React.Component {
             <TopPadding message='What dog is this?' />
             <ImageApp difficulty={this.state.difficulty} handleAnswer={this.handleAnswer} questionN={this.state.playerAnswers.all} />
             <DifficultyMenu changeHandler={this.changeDifficulty} />
-            <PlayerInfo difficulty={this.state.difficulty} questionN={this.state.playerAnswers.all} />
+            <PlayerInfo difficulty={this.state.difficulty} questionN={{
+              answered: this.state.playerAnswers.all,
+              all: this.state.questionNumber,
+            }} />
           </div>
         );
       }
       else {
         return (
-          <p>finished</p>
+          <div className="container finished">
+            <Finished score={this.state.playerAnswers.correct + '/' + this.state.playerAnswers.all} resetGame={this.resetGame} />
+          </div>
         );
       }
     }

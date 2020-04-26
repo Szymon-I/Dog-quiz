@@ -17,4 +17,5 @@ const answerNoptions = {
     hard: 30,
 }
 const randomImageUrl = 'https://dog.ceo/api/breeds/image/random';
-export { difficulty, breeds, difficultyNumber, randomImageUrl,answerNoptions }
+const mainColor = '#4287f5';
+export { difficulty, breeds, difficultyNumber, randomImageUrl, answerNoptions, mainColor }
