@@ -45,29 +45,25 @@ function ColumnWrapper(props) {
 //   );
 // }
 
-function ButtonsMenu(props) {
-
-  const listItems = props.breeds.map((dog) =>
-  <li>{dog}</li>);
-  if (props.difficulty === difficulty.EASY) {
-    return (
-      <ul>
-      {listItems}
-      </ul>
-    );
-  }
-  else if (props.difficulty === difficulty.MEDIUM) {
-    return (
-      <ul>
-      {listItems}
-      </ul>
-    );
-  }
-  else {
-    return <p>hard lvl</p>;
+class ButtonsMenu extends React.Component {
+  componentDidMount() {
+    M.Dropdown.init($('.dropdown-trigger'), {container: $('#drop-options')});
   }
 
+  render() {
+    const listItems = this.props.breeds.map((dog) =>
+      <li key={dog}><a href="#!">{dog}</a></li>);
+    return (
+      <div id='drop-options'>
+        <a class='dropdown-trigger btn' href='#' data-target='dropdown1'>Choose</a>
+        <ul id='dropdown1' className='dropdown-content '>
+          {listItems}
+        </ul>
+      </div>
+    );
+  }
 }
+
 
 class ImageApp extends React.Component {
   constructor(props) {
@@ -131,8 +127,8 @@ class ImageApp extends React.Component {
     }
   }
 
-  shuffle = (arr) =>{
-    for(let i = arr.length - 1; i > 0; i--){
+  shuffle = (arr) => {
+    for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * i)
       const temp = arr[i]
       arr[i] = arr[j]
@@ -145,21 +141,18 @@ class ImageApp extends React.Component {
     const n = splitted.length;
     const breedName = splitted[n - 2];
     const diff = this.props.difficulty;
-    if (diff !== difficulty.HARD) {
-      let breedCopy = [...breeds];
-      breedCopy.splice(breedCopy.indexOf(breedName), 1);
-      let generatedBreeds = [breedName];
-      for (let i = 0; i < difficultyNumber[diff] - 1; i++) {
-        let j = Math.floor(Math.random() * breedCopy.length);
-        generatedBreeds.push(breedCopy[j]);
-        breedCopy.splice(j, 1);
-      }
-      return this.shuffle(generatedBreeds);
+    let breedCopy = [...breeds];
+    breedCopy.splice(breedCopy.indexOf(breedName), 1);
+    let generatedBreeds = [breedName];
+    for (let i = 0; i < difficultyNumber[diff] - 1; i++) {
+      let j = Math.floor(Math.random() * breedCopy.length);
+      generatedBreeds.push(breedCopy[j]);
+      breedCopy.splice(j, 1);
     }
-    else {
-      return [...breeds];
-    }
+    return this.shuffle(generatedBreeds);
   }
+
+
 
   render() {
     const { error, isLoaded, url } = this.state;
@@ -180,9 +173,9 @@ class ImageApp extends React.Component {
       const breedOptions = this.generateBreeds();
       return (
         <>
-          <ColumnWrapper content={content} columnClasses='image-container col s12 m10 offset-m1 l8 offset-l2' />
+          <ColumnWrapper content={content} columnClasses='image-container col s12 m8 offset-m2 l6 offset-l3 xl4 offset-xl4' />
           <ColumnWrapper content={<ButtonsMenu difficulty={this.props.difficulty} breeds={breedOptions} />}
-            columnClasses='image-container col s12 m10 offset-m1 l8 offset-l2' />
+            columnClasses='image-container col s12 m10 offset-m1 l8 offset-l2 center-align' />
         </>
       );
     }
@@ -205,7 +198,7 @@ function TopPadding(props) {
     <>
       <div className='row'>
         <div className="top-padding s12">
-          <p className='question'>{props.message}</p>
+          <p className='header-text wobble-hor-bottom'>{props.message}</p>
         </div>
       </div>
     </>
@@ -213,7 +206,7 @@ function TopPadding(props) {
 }
 function MenuEntry(props) {
   return (
-    <li><a className={"btn-floating " + props.color} onClick={props.changeHandler}>{props.difficulty}</a></li>
+    <li key={props.color}><a className={"btn-floating " + props.color} onClick={props.changeHandler}>{props.difficulty}</a></li>
   )
 }
 
@@ -274,7 +267,9 @@ class App extends React.Component {
     });
   }
   changeDifficulty = (diff) => {
-    this.setState({ difficulty: diff });
+    if (diff !== this.state.difficulty) {
+      this.setState({ difficulty: diff });
+    }
   }
   render() {
     if (this.state.settingsApplied) {

@@ -19,12 +19,12 @@ code {
   width: 100%;
 }
 .top-padding{
-  height: 20vh;
+  height: 12vh;
 }
 .custom-spinner{
   padding-left: 35%;
 }
-.question{
+.header-text{
   width: 100%;
  text-align: center;
  font-size: 4em;
@@ -38,4 +38,8 @@ code {
 }
 .setting-hint{
   font-size: 3em;
+}
+.dropdown-content{
+  position: relative !important;
+
 }

@@ -9,6 +9,6 @@ const breeds = ['affenpinscher', 'african', 'airedale', 'akita', 'appenzeller', 
 const difficultyNumber = {
     easy: 2,
     mid: 4,
-    hard: breeds.length,
+    hard: 6,
 }
 export { difficulty, breeds, difficultyNumber }
