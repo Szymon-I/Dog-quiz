@@ -1,7 +1,8 @@
 
 import React from 'react';
 
-function PlayerInfo(props) {
+// player info at the bottom
+function GameInfo(props) {
     return (
         <footer class="page-footer sticky-footer blue">
             <div class="footer-copyright">
@@ -14,6 +15,7 @@ function PlayerInfo(props) {
     );
 }
 
+// padding for header text
 function TopPadding(props) {
     return (
         <>
@@ -25,12 +27,13 @@ function TopPadding(props) {
         </>
     );
 }
+// menu entry for floating button with dynamic difficulty
 function MenuEntry(props) {
     return (
         <li key={props.color}><a className={"btn-floating " + props.color} onClick={props.changeHandler}>{props.difficulty}</a></li>
     )
 }
-
+// materialize row-column wrapper
 function ColumnWrapper(props) {
     return (
         <div className="row">
@@ -40,7 +43,7 @@ function ColumnWrapper(props) {
         </div>
     );
 }
-
+// screen rendered after finished game
 function Finished(props) {
     return (
         <>
@@ -55,12 +58,8 @@ function Finished(props) {
                     <a className="waves-effect waves-light btn" onClick={() => props.resetGame()}>Play again</a>
                 </div>
             </div>
-            {/* <PlayNext resetGame={props.resetGame} /> */}
         </>
     );
 }
-function Summary(props) {
-    return (null);
-}
 
-export { PlayerInfo, TopPadding, MenuEntry, ColumnWrapper, Finished }
+export { GameInfo, TopPadding, MenuEntry, ColumnWrapper, Finished }
