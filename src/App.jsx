@@ -1,6 +1,6 @@
 import React from 'react';
-import {difficulty} from './Globals';
-import {StartingSettings} from './Starter';
+import { difficulty, breeds, difficultyNumber } from './Globals';
+import { StartingSettings } from './Starter';
 import './App.css';
 import './animations.css';
 import { DualRing } from 'react-spinners-css';
@@ -27,7 +27,7 @@ const mainColor = '#4287f5';
 
 function ColumnWrapper(props) {
   return (
-    <div class="row">
+    <div className="row">
       <div className={props.columnClasses}>
         {props.content}
       </div>
@@ -47,31 +47,26 @@ function ColumnWrapper(props) {
 
 function ButtonsMenu(props) {
 
-  let menu;
+  const listItems = props.breeds.map((dog) =>
+  <li>{dog}</li>);
   if (props.difficulty === difficulty.EASY) {
-    menu = (
-      <>
-        <button>1</button>
-        <button>2</button>
-      </>
+    return (
+      <ul>
+      {listItems}
+      </ul>
     );
   }
   else if (props.difficulty === difficulty.MEDIUM) {
-    menu = (
-      <>
-        <button>1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>4</button>
-      </>
+    return (
+      <ul>
+      {listItems}
+      </ul>
     );
   }
   else {
-    menu = <p>hard lvl</p>;
+    return <p>hard lvl</p>;
   }
-  return (
-    <>{menu}</>
-  );
+
 }
 
 class ImageApp extends React.Component {
@@ -136,29 +131,61 @@ class ImageApp extends React.Component {
     }
   }
 
+  shuffle = (arr) =>{
+    for(let i = arr.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * i)
+      const temp = arr[i]
+      arr[i] = arr[j]
+      arr[j] = temp
+    }
+    return arr;
+  }
+  generateBreeds = () => {
+    const splitted = this.state.url.split('/');
+    const n = splitted.length;
+    const breedName = splitted[n - 2];
+    const diff = this.props.difficulty;
+    if (diff !== difficulty.HARD) {
+      let breedCopy = [...breeds];
+      breedCopy.splice(breedCopy.indexOf(breedName), 1);
+      let generatedBreeds = [breedName];
+      for (let i = 0; i < difficultyNumber[diff] - 1; i++) {
+        let j = Math.floor(Math.random() * breedCopy.length);
+        generatedBreeds.push(breedCopy[j]);
+        breedCopy.splice(j, 1);
+      }
+      return this.shuffle(generatedBreeds);
+    }
+    else {
+      return [...breeds];
+    }
+  }
+
   render() {
     const { error, isLoaded, url } = this.state;
-    let content = null;
     if (error) {
-      content = <p>{error.message}</p>;
-    } else if (!isLoaded) {
-      content = (
-        <DualRing
+      return (
+        <ColumnWrapper content={<p>{error.message}</p>} columnClasses='image-container col s12 m10 offset-m1 l8 offset-l2' />
+      );
+    } else if (!isLoaded || !this.state.url) {
+      return (
+        <ColumnWrapper content={<DualRing
           className='custom-spinner'
           color={mainColor}
           size={80}
-        />
+        />} columnClasses='image-container col s12 m10 offset-m1 l8 offset-l2' />
       );
     } else {
-      content = <img className='dog-image valign-wrapper scale-up-center' src={url} alt="" key={url} />
+      const content = <img className='dog-image valign-wrapper scale-up-center' src={url} alt="" key={url} />
+      const breedOptions = this.generateBreeds();
+      return (
+        <>
+          <ColumnWrapper content={content} columnClasses='image-container col s12 m10 offset-m1 l8 offset-l2' />
+          <ColumnWrapper content={<ButtonsMenu difficulty={this.props.difficulty} breeds={breedOptions} />}
+            columnClasses='image-container col s12 m10 offset-m1 l8 offset-l2' />
+        </>
+      );
     }
-    return (
-      <>
-        <ColumnWrapper content={content} columnClasses='image-container col s12 m10 offset-m1 l8 offset-l2' />
-        <ColumnWrapper content={<ButtonsMenu difficulty={this.props.difficulty} />}
-          columnClasses='image-container col s12 m10 offset-m1 l8 offset-l2' />
-      </>
-    );
   }
 }
 
@@ -232,7 +259,7 @@ class App extends React.Component {
     this.state = {
       settingsApplied: false,
       difficulty: null,
-      qustionNumber: null,
+      questionNumber: null,
       playerAnswers: {
         correct: 0,
         incorrect: 0,
@@ -243,17 +270,16 @@ class App extends React.Component {
     this.setState({
       settingsApplied: true,
       difficulty: settings.difficulty,
-      qustionNumber: settings.qustionNumber,
+      questionNumber: settings.questionNumber,
     });
   }
   changeDifficulty = (diff) => {
     this.setState({ difficulty: diff });
   }
-
   render() {
     if (this.state.settingsApplied) {
       return (
-        <div class="container">
+        <div className="container">
           <TopPadding message='What dog is this?' />
           <ImageApp difficulty={this.state.difficulty} />
           <DifficultyMenu changeHandler={this.changeDifficulty} />
@@ -262,7 +288,7 @@ class App extends React.Component {
     }
     else {
       return (
-        <div class="container">
+        <div className="container">
           <TopPadding message='' />
           <StartingSettings PushSettings={this.starterSettings} />
         </div>
