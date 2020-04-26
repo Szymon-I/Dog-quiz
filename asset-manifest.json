@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/dog-quiz/static/css/main.d1841f29.chunk.css",
-    "main.js": "/dog-quiz/static/js/main.5c7d1486.chunk.js",
-    "main.js.map": "/dog-quiz/static/js/main.5c7d1486.chunk.js.map",
-    "runtime-main.js": "/dog-quiz/static/js/runtime-main.743f97d7.js",
-    "runtime-main.js.map": "/dog-quiz/static/js/runtime-main.743f97d7.js.map",
-    "static/css/2.09622fa3.chunk.css": "/dog-quiz/static/css/2.09622fa3.chunk.css",
-    "static/js/2.83637f56.chunk.js": "/dog-quiz/static/js/2.83637f56.chunk.js",
-    "static/js/2.83637f56.chunk.js.map": "/dog-quiz/static/js/2.83637f56.chunk.js.map",
-    "index.html": "/dog-quiz/index.html",
-    "precache-manifest.24303420b9251c580cb23a2743d49438.js": "/dog-quiz/precache-manifest.24303420b9251c580cb23a2743d49438.js",
-    "service-worker.js": "/dog-quiz/service-worker.js",
-    "static/css/2.09622fa3.chunk.css.map": "/dog-quiz/static/css/2.09622fa3.chunk.css.map",
-    "static/css/main.d1841f29.chunk.css.map": "/dog-quiz/static/css/main.d1841f29.chunk.css.map",
-    "static/js/2.83637f56.chunk.js.LICENSE.txt": "/dog-quiz/static/js/2.83637f56.chunk.js.LICENSE.txt"
+    "main.css": "/Dog-quiz/static/css/main.d1841f29.chunk.css",
+    "main.js": "/Dog-quiz/static/js/main.09a1625d.chunk.js",
+    "main.js.map": "/Dog-quiz/static/js/main.09a1625d.chunk.js.map",
+    "runtime-main.js": "/Dog-quiz/static/js/runtime-main.46353f3f.js",
+    "runtime-main.js.map": "/Dog-quiz/static/js/runtime-main.46353f3f.js.map",
+    "static/css/2.09622fa3.chunk.css": "/Dog-quiz/static/css/2.09622fa3.chunk.css",
+    "static/js/2.83637f56.chunk.js": "/Dog-quiz/static/js/2.83637f56.chunk.js",
+    "static/js/2.83637f56.chunk.js.map": "/Dog-quiz/static/js/2.83637f56.chunk.js.map",
+    "index.html": "/Dog-quiz/index.html",
+    "precache-manifest.d8da97b7ce2b3fa8aac04a9c5ea27b5c.js": "/Dog-quiz/precache-manifest.d8da97b7ce2b3fa8aac04a9c5ea27b5c.js",
+    "service-worker.js": "/Dog-quiz/service-worker.js",
+    "static/css/2.09622fa3.chunk.css.map": "/Dog-quiz/static/css/2.09622fa3.chunk.css.map",
+    "static/css/main.d1841f29.chunk.css.map": "/Dog-quiz/static/css/main.d1841f29.chunk.css.map",
+    "static/js/2.83637f56.chunk.js.LICENSE.txt": "/Dog-quiz/static/js/2.83637f56.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.743f97d7.js",
+    "static/js/runtime-main.46353f3f.js",
     "static/css/2.09622fa3.chunk.css",
     "static/js/2.83637f56.chunk.js",
     "static/css/main.d1841f29.chunk.css",
-    "static/js/main.5c7d1486.chunk.js"
+    "static/js/main.09a1625d.chunk.js"
   ]
 }
