@@ -16,7 +16,7 @@ code {
 }
 .dog-image{
   max-height: 100%;
-  max-width: 100%;
+  width: 100%;
 }
 .top-padding{
   height: 20vh;
@@ -31,4 +31,11 @@ code {
 }
 .difficulty_menu{
   font-family: monospace, 'monospace'
+}
+
+.difficulty-hint{
+  padding-right: 2%;
+}
+.setting-hint{
+  font-size: 3em;
 }

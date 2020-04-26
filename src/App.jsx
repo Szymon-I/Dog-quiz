@@ -1,5 +1,8 @@
 import React from 'react';
+import {difficulty} from './Globals';
+import {StartingSettings} from './Starter';
 import './App.css';
+import './animations.css';
 import { DualRing } from 'react-spinners-css';
 import $ from 'jquery';
 import M from 'materialize-css';
@@ -19,22 +22,28 @@ const mainColor = '#4287f5';
 //     );
 //   }
 // }
-const difficulty = {
-  EASY: 'easy',
-  MEDIUM: 'mid',
-  HARD: 'hard'
-}
+
 
 
 function ColumnWrapper(props) {
   return (
     <div class="row">
-      <div className="image-container col s12 m6 offset-m3 l4 offset-l4">
+      <div className={props.columnClasses}>
         {props.content}
       </div>
     </div>
   );
 }
+
+// function ImageWrapper(props) {
+//   return (
+//     <div class="row">
+//       <div className="image-container col s12 m10 offset-m1 l8 offset-l2">
+//         {props.content}
+//       </div>
+//     </div>
+//   );
+// }
 
 function ButtonsMenu(props) {
 
@@ -72,6 +81,7 @@ class ImageApp extends React.Component {
       error: null,
       isLoaded: false,
       url: null,
+      prev_diff: props.difficulty
     };
   }
 
@@ -107,14 +117,22 @@ class ImageApp extends React.Component {
         }
       )
   }
+  // fetch phono after component is mounted
   componentDidMount() {
     this.fetch_photo();
   }
+
   componentDidUpdate() {
+    // if error encountered -> flush error and force update fetch
     if (this.state.error) {
       this.setState({
         error: null
       });
+    }
+    // if difficulty has changed -> get new photo and update old setting
+    if (this.props.difficulty !== this.state.prev_diff) {
+      this.fetch_photo();
+      this.setState({ prev_diff: this.props.difficulty })
     }
   }
 
@@ -124,18 +142,21 @@ class ImageApp extends React.Component {
     if (error) {
       content = <p>{error.message}</p>;
     } else if (!isLoaded) {
-      content = (<DualRing
-        className='custom-spinner'
-        color={mainColor}
-        size={80}
-      />);
+      content = (
+        <DualRing
+          className='custom-spinner'
+          color={mainColor}
+          size={80}
+        />
+      );
     } else {
-      content = <img className='dog-image valign-wrapper' src={url} alt="" />
+      content = <img className='dog-image valign-wrapper scale-up-center' src={url} alt="" key={url} />
     }
     return (
       <>
-        <ColumnWrapper content={content} />
-        <ColumnWrapper content={<ButtonsMenu difficulty={this.props.difficulty} />} />
+        <ColumnWrapper content={content} columnClasses='image-container col s12 m10 offset-m1 l8 offset-l2' />
+        <ColumnWrapper content={<ButtonsMenu difficulty={this.props.difficulty} />}
+          columnClasses='image-container col s12 m10 offset-m1 l8 offset-l2' />
       </>
     );
   }
@@ -157,7 +178,7 @@ function TopPadding(props) {
     <>
       <div className='row'>
         <div className="top-padding s12">
-          <p className='question'>What dog is this?</p>
+          <p className='question'>{props.message}</p>
         </div>
       </div>
     </>
@@ -180,9 +201,9 @@ class DifficultyMenu extends React.Component {
           <i className="large material-icons">arrow_drop_up</i>
         </a>
         <ul>
-          <MenuEntry color='green' difficulty={difficulty.EASY} changeHandler={()=>this.props.changeHandler(difficulty.EASY)} />
-          <MenuEntry color='yellow darken-3' difficulty={difficulty.MEDIUM} changeHandler={()=>this.props.changeHandler(difficulty.MEDIUM)} />
-          <MenuEntry color='red' difficulty={difficulty.HARD} changeHandler={()=>this.props.changeHandler(difficulty.HARD)} />
+          <MenuEntry color='green' difficulty={difficulty.EASY} changeHandler={() => this.props.changeHandler(difficulty.EASY)} />
+          <MenuEntry color='yellow darken-3' difficulty={difficulty.MEDIUM} changeHandler={() => this.props.changeHandler(difficulty.MEDIUM)} />
+          <MenuEntry color='red' difficulty={difficulty.HARD} changeHandler={() => this.props.changeHandler(difficulty.HARD)} />
         </ul>
       </div>
     );
@@ -203,24 +224,50 @@ class DifficultyMenu extends React.Component {
 // }
 
 
+
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      difficulty: difficulty.EASY,
+      settingsApplied: false,
+      difficulty: null,
+      qustionNumber: null,
+      playerAnswers: {
+        correct: 0,
+        incorrect: 0,
+      }
     }
+  }
+  starterSettings = (settings) => {
+    this.setState({
+      settingsApplied: true,
+      difficulty: settings.difficulty,
+      qustionNumber: settings.qustionNumber,
+    });
   }
   changeDifficulty = (diff) => {
     this.setState({ difficulty: diff });
   }
+
   render() {
-    return (
-      <div class="container">
-        <TopPadding />
-        <ImageApp difficulty={this.state.difficulty} />
-        <DifficultyMenu changeHandler={this.changeDifficulty} />
-      </div>
-    );
+    if (this.state.settingsApplied) {
+      return (
+        <div class="container">
+          <TopPadding message='What dog is this?' />
+          <ImageApp difficulty={this.state.difficulty} />
+          <DifficultyMenu changeHandler={this.changeDifficulty} />
+        </div>
+      );
+    }
+    else {
+      return (
+        <div class="container">
+          <TopPadding message='' />
+          <StartingSettings PushSettings={this.starterSettings} />
+        </div>
+      );
+    }
   }
 }
 
