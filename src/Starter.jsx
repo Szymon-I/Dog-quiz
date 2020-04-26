@@ -12,13 +12,13 @@ class StartingDifficulty extends React.Component {
         </div>
         <div className="row center-align">
           <div className='col s4'>
-            <a className="waves-effect waves-light btn" onClick={() => this.props.setter(difficulty.EASY)}>easy</a>
+            <a className="waves-effect waves-light btn" onClick={() => this.props.setter(difficulty.EASY)}>{difficulty.EASY}</a>
           </div>
           <div className='col s4'>
-            <a className="waves-effect waves-light btn" onClick={() => this.props.setter(difficulty.MEDIUM)}>medium</a>
+            <a className="waves-effect waves-light btn" onClick={() => this.props.setter(difficulty.MEDIUM)}>{difficulty.MEDIUM}</a>
           </div>
           <div className='col s4'>
-            <a className="waves-effect waves-light btn" onClick={() => this.props.setter(difficulty.HARD)}>hard</a>
+            <a className="waves-effect waves-light btn" onClick={() => this.props.setter(difficulty.HARD)}>{difficulty.HARD}</a>
           </div>
         </div>
       </>

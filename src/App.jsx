@@ -261,7 +261,7 @@ class App extends React.Component {
       if (this.state.questionNumber !== this.state.playerAnswers.all) {
         return (
           <div className="container">
-            <TopPadding message='What dog is this?' />
+            <TopPadding message="What's it?" />
             <ImageApp difficulty={this.state.difficulty} handleAnswer={this.handleAnswer} questionN={this.state.playerAnswers.all} />
             <DifficultyMenu changeHandler={this.changeDifficulty} />
             <PlayerInfo difficulty={this.state.difficulty} questionN={{

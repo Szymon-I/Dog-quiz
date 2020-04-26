@@ -40,17 +40,22 @@ function ColumnWrapper(props) {
         </div>
     );
 }
-function PlayNext(props) {
-    return (
-        <button onClick={() => props.resetGame()} >reset</button>
-    );
-}
 
 function Finished(props) {
     return (
         <>
-            <TopPadding message={"Your score: " + props.score} />
-            <PlayNext resetGame={props.resetGame} />
+            <TopPadding />
+            <div className="row center-align">
+                <div className='s12'>
+                    <p className='setting-hint'>{"Your score: " + props.score}</p>
+                </div>
+            </div>
+            <div className="row center-align">
+                <div className='col s12'>
+                    <a className="waves-effect waves-light btn" onClick={() => props.resetGame()}>Play again</a>
+                </div>
+            </div>
+            {/* <PlayNext resetGame={props.resetGame} /> */}
         </>
     );
 }
